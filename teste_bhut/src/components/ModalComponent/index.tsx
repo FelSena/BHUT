@@ -2,18 +2,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 import API from "../Api";
-
-interface CarInterface {
-  _id: string;
-  title: string;
-  brand: string;
-  price: string;
-  age: number;
-}
 
 interface FormInterface {
   title: string;

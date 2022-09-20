@@ -1,7 +1,9 @@
+import axios from "axios";
+
 const API = async (endPoint: string) => {
   const output = await fetch(
     `https://api.allorigins.win/get?url=${encodeURIComponent(
-      `http://api-test.bhut.com.br:3000/api/${endPoint}`
+      "http://api-test.bhut.com.br:3000/api/cars"
     )}`
   )
     .then((response) => {
@@ -11,4 +13,5 @@ const API = async (endPoint: string) => {
     .then((data) => JSON.parse(data.contents));
   return output;
 };
+
 export default API;

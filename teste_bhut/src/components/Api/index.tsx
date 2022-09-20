@@ -1,5 +1,3 @@
-import axios from "axios";
-
 const API = async (endPoint: string) => {
   const output = await fetch(
     `https://api.allorigins.win/get?url=${encodeURIComponent(

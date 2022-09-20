@@ -1,7 +1,7 @@
 import { ToastContainer } from "react-toastify";
-import "./App.css";
 import MainRoutes from "./components/Routes";
 import "react-toastify/dist/ReactToastify.css";
+import Navbar from "./components/navbar";
 
 function App() {
   return (
@@ -17,6 +17,7 @@ function App() {
         draggable
         pauseOnHover
       />
+      <Navbar />
       <MainRoutes />
     </div>
   );

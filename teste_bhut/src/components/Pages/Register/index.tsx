@@ -68,9 +68,9 @@ const Register = () => {
         autoComplete="off"
         onSubmit={handleSubmit(onSubmitFunction)}
       >
-        <h1>Cadastre seu Veiculo</h1>
+        <h1>Cadastre seu veículo:</h1>
         <TextField
-          label="Nome"
+          label="Modelo"
           helperText={errors.title?.message}
           required
           {...register("title")}
@@ -95,7 +95,18 @@ const Register = () => {
           helperText={errors.age?.message}
         />
 
-        <Button type="submit">Cadastrar</Button>
+        <Button
+          type="submit"
+          sx={{
+            color: "#F3123C",
+            "&:hover": {
+              bgcolor: "#F3123C",
+              color: "white",
+            },
+          }}
+        >
+          Cadastrar
+        </Button>
       </Box>
     </Box>
   );

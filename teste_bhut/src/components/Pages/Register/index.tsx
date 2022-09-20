@@ -30,7 +30,6 @@ const Register = () => {
   });
 
   const onSubmitFunction = async (response: any) => {
-    console.log(response);
     await fetch("http://api-test.bhut.com.br:3000/api/cars", {
       headers: {
         "Content-Type": "application/json",

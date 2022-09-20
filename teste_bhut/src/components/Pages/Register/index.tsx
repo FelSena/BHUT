@@ -38,16 +38,7 @@ const Register = () => {
       mode: "cors",
       body: JSON.stringify(response),
     }).then((res) => {
-      res.status === 200 &&
-        toast.success("Veículo cadastrado com sucesso!", {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+      res.status === 200 && toast.success("Veículo cadastrado com sucesso!");
       setTimeout(() => {
         navigation("/", { replace: true });
       }, 2000);

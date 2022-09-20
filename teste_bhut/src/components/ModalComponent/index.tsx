@@ -1,5 +1,10 @@
-import { Box, Button } from "@mui/material";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Box, Button, TextField } from "@mui/material";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import * as yup from "yup";
 
 interface CarInterface {
   _id: string;
@@ -9,7 +14,45 @@ interface CarInterface {
   age: number;
 }
 
+interface FormInterface {
+  title: string;
+  brand: string;
+  price: string;
+  age: number;
+}
+
 const ModalComponent = ({ modalItem, handleClose }: any) => {
+  const [form, setForm] = useState(false);
+
+  const formSchema = yup.object().shape({
+    title: yup.string().required("Dado obrigatório"),
+    brand: yup.string().required("Dado obrigatório"),
+    price: yup.string().required("Dado obrigatório"),
+    age: yup.number().required("Dado obrigatório"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormInterface>({
+    resolver: yupResolver(formSchema),
+  });
+
+  const onSubmitFunction = async (response: any) => {
+    await fetch(`http://api-test.bhut.com.br:3000/api/cars/${modalItem._id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "DELETE",
+      mode: "cors",
+      body: JSON.stringify(response),
+    }).then((res) => {
+      res.status === 200 && toast.success("Editado!");
+      handleClose();
+    });
+  };
+
   const deleteCar = async (id: string) => {
     await fetch(`http://api-test.bhut.com.br:3000/api/cars/${id}`, {
       headers: {
@@ -23,7 +66,7 @@ const ModalComponent = ({ modalItem, handleClose }: any) => {
     });
   };
   const editCar = async () => {
-    console.log(modalItem);
+    setForm(true);
   };
   return (
     <Box
@@ -49,28 +92,52 @@ const ModalComponent = ({ modalItem, handleClose }: any) => {
           justifyContent: "center",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "20px",
-          }}
-        >
-          <h3>{modalItem.title}</h3>
-          <span>Marca: {modalItem.brand}</span>
-          <span>Ano: {modalItem.age}</span>
-          <span>Valor: R${modalItem.price},00</span>
+        {form ? (
           <Box
+            component="form"
             sx={{
+              "& .MuiTextField-root": { m: 1, width: "25ch" },
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
-              gap: "10px",
             }}
+            flexDirection="column"
+            noValidate
+            autoComplete="off"
+            onSubmit={handleSubmit(onSubmitFunction)}
           >
+            <h1>Cadastre seu veículo:</h1>
+            <TextField
+              label="Modelo"
+              helperText={errors.title?.message}
+              required
+              {...register("title")}
+              defaultValue={modalItem.title}
+            />
+            <TextField
+              label="Marca"
+              helperText={errors.brand?.message}
+              required
+              {...register("brand")}
+              defaultValue={modalItem.brand}
+            />
+            <TextField
+              label="Preço"
+              helperText={errors.price?.message}
+              required
+              {...register("price")}
+              defaultValue={modalItem.price}
+            />
+            <TextField
+              label="Ano"
+              inputProps={{ maxLength: 4 }}
+              required
+              {...register("age")}
+              defaultValue={modalItem.age}
+              helperText={errors.age?.message}
+            />
+
             <Button
+              type="submit"
               sx={{
                 color: "#F3123C",
                 "&:hover": {
@@ -78,25 +145,60 @@ const ModalComponent = ({ modalItem, handleClose }: any) => {
                   color: "white",
                 },
               }}
-              onClick={() => editCar()}
             >
               Editar
             </Button>
-            <Button
-              sx={{
-                color: "#F3123C",
-                "&:hover": {
-                  bgcolor: "#F3123C",
-                  color: "white",
-                },
-              }}
-              onClick={() => deleteCar(modalItem._id)}
-            >
-              Deletar
-            </Button>
           </Box>
-          <Button onClick={handleClose}>Fechar</Button>
-        </Box>
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "20px",
+            }}
+          >
+            <h3>{modalItem.title}</h3>
+            <span>Marca: {modalItem.brand}</span>
+            <span>Ano: {modalItem.age}</span>
+            <span>Valor: R${modalItem.price},00</span>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+              }}
+            >
+              <Button
+                sx={{
+                  color: "#F3123C",
+                  "&:hover": {
+                    bgcolor: "#F3123C",
+                    color: "white",
+                  },
+                }}
+                onClick={() => editCar()}
+              >
+                Editar
+              </Button>
+              <Button
+                sx={{
+                  color: "#F3123C",
+                  "&:hover": {
+                    bgcolor: "#F3123C",
+                    color: "white",
+                  },
+                }}
+                onClick={() => deleteCar(modalItem._id)}
+              >
+                Deletar
+              </Button>
+            </Box>
+            <Button onClick={handleClose}>Fechar</Button>
+          </Box>
+        )}
       </Box>
     </Box>
   );

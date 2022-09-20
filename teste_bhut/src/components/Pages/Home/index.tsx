@@ -24,13 +24,11 @@ const Home = () => {
     setModalItem({});
   };
   useEffect(() => {
-    const data = async () => {
-      const output = await API("");
-      setCars(output);
+    API.get("").then((res) => {
+      setCars(res.data);
       setIsMounted(true);
-    };
-    data();
-  }, []);
+    });
+  }, [isMounted]);
 
   return (
     <>
@@ -73,7 +71,11 @@ const Home = () => {
         </Box>
       </Box>
       {modal && (
-        <ModalComponent modalItem={modalItem} handleClose={handleClose} />
+        <ModalComponent
+          modalItem={modalItem}
+          handleClose={handleClose}
+          setIsMounted={setIsMounted}
+        />
       )}
     </>
   );

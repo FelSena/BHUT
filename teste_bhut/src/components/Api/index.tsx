@@ -1,15 +1,7 @@
-const API = async (endPoint: string) => {
-  const output = await fetch(
-    `https://api.allorigins.win/get?url=${encodeURIComponent(
-      "http://api-test.bhut.com.br:3000/api/cars"
-    )}`
-  )
-    .then((response) => {
-      if (response.ok) return response.json();
-      throw new Error("Network response was not ok.");
-    })
-    .then((data) => JSON.parse(data.contents));
-  return output;
-};
+import axios from "axios";
+
+const API = axios.create({
+  baseURL: "http://api-test.bhut.com.br:3000/api/cars/",
+});
 
 export default API;

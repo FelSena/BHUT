@@ -5,6 +5,7 @@ import { Box, Button, TextField } from "@mui/material";
 
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import API from "../../Api";
 
 const Register = () => {
   const navigation = useNavigate();
@@ -30,14 +31,7 @@ const Register = () => {
   });
 
   const onSubmitFunction = async (response: any) => {
-    await fetch("http://api-test.bhut.com.br:3000/api/cars", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-      mode: "cors",
-      body: JSON.stringify(response),
-    }).then((res) => {
+    await API.post("", response).then((res) => {
       res.status === 200 && toast.success("Veículo cadastrado com sucesso!");
       setTimeout(() => {
         navigation("/", { replace: true });

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as yup from "yup";
+import API from "../Api";
 
 interface CarInterface {
   _id: string;
@@ -21,7 +22,7 @@ interface FormInterface {
   age: number;
 }
 
-const ModalComponent = ({ modalItem, handleClose }: any) => {
+const ModalComponent = ({ modalItem, handleClose, setIsMounted }: any) => {
   const [form, setForm] = useState(false);
 
   const formSchema = yup.object().shape({
@@ -40,29 +41,18 @@ const ModalComponent = ({ modalItem, handleClose }: any) => {
   });
 
   const onSubmitFunction = async (response: any) => {
-    await fetch(`http://api-test.bhut.com.br:3000/api/cars/${modalItem._id}`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "DELETE",
-      mode: "cors",
-      body: JSON.stringify(response),
-    }).then((res) => {
+    await API.put(`${modalItem._id}`, response).then((res) => {
       res.status === 200 && toast.success("Editado!");
+      setIsMounted(false);
       handleClose();
     });
   };
 
   const deleteCar = async (id: string) => {
-    await fetch(`http://api-test.bhut.com.br:3000/api/cars/${id}`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "DELETE",
-      mode: "cors",
-    }).then((res) => {
+    await API.delete(`${id}`).then((res) => {
       res.status === 200 && toast.success("Deletado!");
       handleClose();
+      setIsMounted(false);
     });
   };
   const editCar = async () => {
@@ -84,7 +74,7 @@ const ModalComponent = ({ modalItem, handleClose }: any) => {
       <Box
         sx={{
           width: "70%",
-          height: "50%",
+          height: "500px",
           bgcolor: "white",
           boxShadow: "4px 4px  rgba(0,0,0,0.3)",
           display: "flex",
